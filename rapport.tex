@@ -1,0 +1,142 @@
+\documentclass[a4paper,10pt]{article}
+%Avril 2016
+
+\usepackage{amsmath, amssymb,amsfonts,  mathrsfs}
+\usepackage{amsthm}%\usepackage[T1]{fontenc}
+\usepackage{a4wide}
+\usepackage[latin1]{inputenc}
+\usepackage[francais]{babel}% donne de bonnes c\'esures  en francais
+\usepackage{titlesec}%pour modifier le style des sections
+\usepackage{float}%pour fixer les flottants
+\usepackage{url}%pour ecrire une adresse d'un site web
+\usepackage[all]{xy}%pour faire des diagrammes
+\usepackage[dvips]{graphicx}
+\usepackage{nopageno} % pour supprimer les numeros des pages
+\usepackage{pdfsync}
+\pagestyle{myheadings}
+\markright{ENSIIE 1A Année 2015/2016 \\ MPM2 Projet Math}
+\newtheorem{definition}{Définition}
+
+\begin{document}
+\begin{center}
+\textbf{\huge{Rapport : Projet maths}}
+\end{center}
+\medskip
+
+\section{Partie Mathématiques}
+
+\subsection{Dérivée de Gateau $J'(u,\delta u)$}
+
+\renewcommand{\labelitemi}{$\bullet$}
+\begin{itemize}
+	\item Déterminer la dérivée de Gâteau de la fonction $x(u)$.
+	\medbreak
+
+	On a :
+	\begin{equation*}
+		\left\{\begin{array}{l}
+		\dot x(t) = Ax(t) + Bu(t)\\
+		x(0) = x_0
+		\end{array}
+		\right.
+	\end{equation*}
+	\medbreak
+
+	Et la formule de la dérivée de Gâteau :
+	\begin{equation*}
+		f'(u,v) = \lim_{\lambda\to 0^+} \frac{f(u+\lambda) - f(u)}{\lambda}.
+	\end{equation*}
+	\medbreak
+	
+	On cherche :
+	\begin{equation*}
+		\left\{\begin{array}{l}
+		\dot x'(u,\delta u)(t)\\
+		x'(0)
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	Or $x'(0) = 0$ \\	
+	Et :
+	\begin{equation*}
+	\begin{aligned}
+		\dot x'(u,\delta u)(t) &= \lim_{\lambda\to 0^+} \frac{\dot x(u,\delta u)(t) - \dot x(u)(t)}{\lambda} \\
+			&= \lim_{\lambda\to 0^+} \frac{Ax(u,\delta u)(t) + B(u,\delta u)(t) - [Ax(u)(t) + B(u)(t)]}{\lambda} \\
+			&= \lim_{\lambda\to 0^+} \frac{A[x(u,\delta u)(t) - x(u)(t)] + B(u,\delta u)(t) -  B(u)(t)}{\lambda} \\
+			&= Ax'(u,\delta u)(t) + \lim_{\lambda\to 0^+} \frac{B(u)(t) + B(\lambda\delta u)(t) - B(u)(t)}{\lambda} \\	
+			&= Ax'(u,\delta u)(t) + B(\delta u)(t) \\				
+	\end{aligned}		
+	\end{equation*}	
+	\medbreak
+	
+	On a donc la dérivée de Gâteau de la fonction $x(u)$ :
+	\begin{equation*}
+		\left\{\begin{array}{l}
+		\dot x'(u,\delta u)(t) = Ax'(u,\delta u)(t) + B(\delta u)(t)\\
+		x'(0)= 0
+		\end{array}
+		\right.
+	\end{equation*}
+	
+	\item En déduire la dérivée de Gâteau de $J$.
+	\medbreak
+	
+	\begin{equation*}
+\begin{aligned}
+	J'(u,\delta u)(t) &= \lim_{\lambda\to 0^+} \frac{J(u,\lambda \delta u)(t) - J(u)(t)}{\lambda} \\
+		&= \lim_{\lambda\to 0^+} \int_{0}^{T} \frac{\epsilon}{2} (u + \lambda \delta  u)² \, \mathrm{d}s + \frac{1}{2}x²(u+\lambda\delta u)(t) - \int_{0}^{T} \frac{\epsilon}{2} u²(t) \, \mathrm{d}s - \frac{1}{2} x²u(t)\\	
+		&= \lim_{\lambda\to 0^+} \frac{1}{\lambda} [\int_{0}^{T} \frac{\epsilon}{2}(u²(s) + \lambda²\delta u²(s) \, \mathrm{d}s) -  \int_{0}^{T} \frac{\epsilon}{2} u²(s)]  \, \mathrm{d}s\\	
+		&= \lim_{\lambda\to 0^+} \frac{1}{\lambda} [\frac{1}{2}x²(u+\delta u)(t) - \frac{1}{2} x²(u)(t)]\\
+\end{aligned}		
+\end{equation*}
+On identifie par rapport à la dérivée de Gâteau, d'où :
+\begin{equation*}
+\begin{aligned}
+	J'(u,\delta u)(t) &= \lim_{\lambda\to 0^+} \int_{0}^{T} \frac{\epsilon}{2} \frac{\lambda²\delta u²(s)+2\lambda u(s)\delta u(s)}{\lambda} \, \mathrm{d}s + [\frac{1}{2} x² u(t)]' \\
+		&= \lim_{\lambda\to 0^+} \int_{0}^{T} \frac{\epsilon}{2} [\lambda\delta u²(s)+2 u(s)\delta u(s)] \, \mathrm{d}s + x'(u, \delta u)(t)x(t) \\
+		&= \int_{0}^{T} \epsilon u(s)\delta u(s) \, \mathrm{d}s + x'(u, \delta u)(t)x(t) \\
+\end{aligned}		
+\end{equation*}
+	
+	\item Déterminer la fonction $g(t)$.
+	\medbreak	
+	
+	En prenant la formule de la dérivée de Gâteau appliquée pour la fonction $J$ on a :
+	\begin{equation*}
+		J'(u,\delta u)(t) = \lim_{\lambda\to 0^+} \frac{J(u,\delta u)(t) - J(u)(t)}{\lambda}
+	\end{equation*}	
+	
+	D'après la dérivée de Taylor-Young qui fait intervenir le gradient, on a : 
+	\begin{equation*}
+		J(u,`\lambda u)(t) = J(u)(t) + \lambda(\nabla J(u)(t), \delta u) + o(||\lambda \delta u||)
+	\end{equation*}
+	\begin{equation*}
+		\Leftrightarrow J(u,`\lambda u)(t) - J(u)(t) = \lambda(\nabla J(u)(t), \delta u)
+	\end{equation*}
+	
+	En remplaçant on obtient :
+	\begin{equation*}
+	\begin{aligned}
+		J'(u,\delta u)(t) &= \lim_{\lambda\to 0^+} \frac{\lambda(\nabla J(u)(t), \delta u)}{\lambda} \\
+			&= (\nabla J(u)(t), \delta u) \\
+			&= \int_{0}^{T} \nabla J(u)(s) \delta u(s) \, \mathrm{d}s
+	\end{aligned}
+	\end{equation*}	
+	
+	Par identification on voit donc que $g(t) = \nabla J$
+	
+\end{itemize}
+
+\subsection{Calcul de $\nabla J$}
+
+\subsection{Résolution numérique}
+
+\section{Partie Informatique}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
