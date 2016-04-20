@@ -1,68 +1,122 @@
-import numpy as np
-import sys
+#!/usr/bin/python
 from math import *
-from scipy import *
-from scipy.integrate import odeint # Pour resoudre l equation differentielle
-import matplotlib.pyplot as plt # Permet de tracer des graphes
+import numpy as np
+import matplotlib.pyplot as plt # allow to draw graphs
 
-x = 0
-u = 0
-A = 0
-B = 0
-epsilon = 0
-NT = 0
-dT = 0
 
+########################
+# Initialize constants #
+########################
 
 def init():
-    # definition des vecteurs x et u
     global x
-    x = np.array([1, 0, 0, 0])
     global u
-    u = np.array([0, 0])
+    global A
+    global B
+    global epsilon    
+    global NT
+    global dT
+    global ro
 
     T = 5480
     w = 2*pi/T
-
-    global A
-    A = np.matrix([[0, 1, 0, 0], [(3*w)**2, 0, 0, 2*w], [0, 0, 0, 1], [0, -2*w, 0, 0]])
-
-    global B
-    B = np.matrix([[0, 0], [1, 0], [0, 0], [0, 1]])
-    global epsilon
     epsilon=10**(-8)
-    global NT
     NT = 1000
-    global dT
     dT = 0.1
+    ro = 0.1
+
+    x = np.array([1, 0, 0, 0])
+    u = np.array([0, 0])
+
+    A = np.matrix([[0, 1, 0, 0], [(3*w)**2, 0, 0, 2*w], [0, 0, 0, 1], [0, -2*w, 0, 0]])
+    B = np.matrix([[0, 0], [1, 0], [0, 0], [0, 1]])
 
 
-def fun():
+############################
+# Solve the first equation #
+############################
+
+def calculateF():
+    global A
+    global x
+    global B
+    global u
+
     return np.dot(A, x.transpose()) + np.dot(B, u.transpose()) 
 
-def euler():
-    for i in range(0, NT)
-        valeur = fun()
+def firstEquation():
+    global NT
+    global x    
+
+    for i in range(0, NT):
+        valeur = calculateF()
         x = x+dT*valeur
-        t = t+dT
     return x
 
-def deuxFun():
-    return np.dot(A, x.transpose()) + np.dot(B, u.transpose()) 
+
+#############################
+# Solve the second equation #
+#############################
+
+def calculateG():
+    global A
+    global x
+    global B
+    global u
+
+    return np.dot(np.transpose((-1)*A), x)
+
+def secondEquation():
+    global x    
+    global dT
+    global NT
+
+    for i in range(0, NT):
+        valeur = calculateG()
+        x = x - dT * valeur
+    return x
+
+############
+# Gratient #
+############
+
+def gradient():
+    global u
+    global B
+    global epsilon    
+
+    return np.dot(epsilon*u + B, secondEquation())
+
+def gradientIteration():
+    global u
+    global ro
+    global epsilon    
+    global B
+
+    for i in range(0, NT):
+        u = u - ro * gradient()
+    return u
+
+
+########
+# Main #
+########
 
 def main():
     init()
-    # print A
-    # pas = 200
-    # ro = 0.1
-    # for i in range(0, pas):
-    #     u = u - ro * grad(u)
     
-    diffx()
-    plt.plot(x[0], x[2])
+    x1 = []
+    y1 = []
+
+    gradientIteration()
+
+    global x
+    for i in range(0, len(x)):
+        x1.append(x[i][0])
+        y1.append(x[i][2])
+
+    plt.plot(x, y)
     plt.show()
-
-
 
 
 if __name__=='__main__' :
