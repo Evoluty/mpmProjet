@@ -1,1 +1,1 @@
-sudo apt install python3-numpy
+sudo apt install python-numpy
