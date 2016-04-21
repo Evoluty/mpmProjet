@@ -21,16 +21,16 @@ def init():
 
     T = 1
     w = 2*pi/T
-    epsilon=10**(-8)
-    NT = 50
+    epsilon=10**(-3)
+    NT = 500
     dT = 0.01
-    ro = 0.03
+    ro = 0.01
 
-    x = np.transpose(np.atleast_2d([1,0,0,0]))
+    x = np.transpose(np.atleast_2d([0.1,0,0,0]))
     u = np.transpose(np.atleast_2d([0,0]))
 
     A = np.matrix([[0, 1, 0, 0],
-                  [w**2*3, 0, 0, 2*w], 
+                  [(w**2)*3, 0, 0, 2*w], 
                   [0, 0, 0, 1], 
                   [0, -2*w, 0, 0]])
 
@@ -40,17 +40,26 @@ def init():
                    [0, 1]])
 
 
+
+#############################
+# Change coords for display #
+#############################
+
+def newCoordX(x, y, n):
+    global w
+    global dT
+
+    return x*cos(w*n*dT) - y*sin(w*n*dT) + cos(w*n*dT)
+
+def newCoordY(x, y, n):
+    global w
+    global dT
+    return x*sin(w*n*dT) + y*cos(w*n*dT) + sin(w*n*dT)
+
+
 ############################
 # Solve the first equation #
 ############################
-
-def changement_coord_x1(x1, x2, n, delta_t):
-    global w
-    return x1*cos(w*n*delta_t) - x2*sin(w*n*delta_t) + cos(w*n*delta_t)
-
-def changement_coord_x2(x1, x2, n, delta_t):
-    global w
-    return x1*sin(w*n*delta_t) + x2*cos(w*n*delta_t) + sin(w*n*delta_t)
 
 def calculateF():
     global A
@@ -63,13 +72,12 @@ def firstEquation():
     global NT
     global x    
     global dT
-    global tab_x
+    global xTab
 
     for i in range(0, NT):
         valeur = calculateF()
-        print x
         x = x+dT*valeur 
-        tab_x.append([changement_coord_x1(x[0,0], x[2,0], i, dT), x[1,0], changement_coord_x2(x[0,0], x[2,0], i, dT), x[3,0]])
+        xTab.append(x)
     return x
 
 
@@ -87,33 +95,39 @@ def calculateG():
 
 def secondEquation():
     global x
-    p = firstEquation()    
     global dT
     global NT
-    
+    global pTab
+    p = x
     for i in range(0, NT):
         valeur = calculateG()
         p = p - dT * valeur
-    return p
+        pTab.append(p)
+    return x
 
 ############
 # Gratient #
 ############
 
 def gradient():
+    global x
     global u
     global B
     global epsilon    
-    return epsilon*u + np.transpose(B).dot(secondEquation())
+    
+    return epsilon*u + np.transpose(B).dot(x)
 
 def gradientIteration():
     global u
     global ro
     global epsilon    
+    global uTab
     global B
 
+    
     for i in range(0, NT):
         u = u - ro * gradient()
+        uTab.append(u)
     return u
 
 
@@ -124,19 +138,22 @@ def gradientIteration():
 def main():
     init()
     
-    global tab_x
-    tab_x = []
+    global xTab
+    global pTab
+    global uTab
+    xTab = []
+    pTab = []
+    uTab = []
 
-    print gradientIteration()
+    firstEquation()
+    secondEquation()
+    gradientIteration()
 
-    global x
-    print "test"
-    print x
     x1 = []
     y1 = []
-    for i in range(0, len(x)):
-        x1.append(tab_x[i][0])
-        y1.append(tab_x[i][2])
+    for i in range(0, len(xTab)):
+        x1.append(newCoordX(xTab[i][0, 0], xTab[i][2, 0], i))
+        y1.append(newCoordY(xTab[i][0, 0], xTab[i][2, 0], i))
 
     plt.plot(x1, y1)
     plt.show()
