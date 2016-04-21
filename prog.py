@@ -20,12 +20,12 @@ def init():
     global w
     global uTab
 
-    T = 10.0
+    T = 1.0
     w = 2*pi/T
-    epsilon=10**(-8)
+    epsilon=0.001
     NT = 500
     dT = T/NT
-    ro = 0.01
+    ro = 0.03
 
     x = np.transpose(np.atleast_2d([0.1,0,0,0]))
     u = np.transpose(np.atleast_2d([0,0]))
