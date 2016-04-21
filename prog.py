@@ -18,12 +18,13 @@ def init():
     global dT
     global ro
     global w
+    global uTab
 
-    T = 1
+    T = 10.0
     w = 2*pi/T
-    epsilon=10**(-3)
+    epsilon=10**(-8)
     NT = 500
-    dT = 0.01
+    dT = T/NT
     ro = 0.01
 
     x = np.transpose(np.atleast_2d([0.1,0,0,0]))
@@ -39,6 +40,9 @@ def init():
                    [0, 0], 
                    [0, 1]])
 
+    uTab = []
+    for i in range(0, NT):
+        uTab.append(u)
 
 
 #############################
@@ -61,12 +65,12 @@ def newCoordY(x, y, n):
 # Solve the first equation #
 ############################
 
-def calculateF():
+def calculateF(i):
     global A
-    global x
+    global uTab
     global B
     global u
-    return A.dot(x) + B.dot(u)
+    return A.dot(x) + B.dot(uTab[i])
 
 def firstEquation():
     global NT
@@ -75,7 +79,7 @@ def firstEquation():
     global xTab
 
     for i in range(0, NT):
-        valeur = calculateF()
+        valeur = calculateF(i)
         x = x+dT*valeur 
         xTab.append(x)
     return x
@@ -85,13 +89,13 @@ def firstEquation():
 # Solve the second equation #
 #############################
 
-def calculateG():
+def calculateG(i):
     global A
-    global x
+    global xTab
     global B
     global u
 
-    return np.transpose((-1)*A).dot(x)
+    return np.transpose((-1)*A).dot(xTab[i])
 
 def secondEquation():
     global x
@@ -100,10 +104,10 @@ def secondEquation():
     global pTab
     p = x
     for i in range(0, NT):
-        valeur = calculateG()
+        valeur = calculateG(i)
         p = p - dT * valeur
         pTab.append(p)
-    return x
+    return p
 
 ############
 # Gratient #
@@ -117,17 +121,15 @@ def gradient():
     
     return epsilon*u + np.transpose(B).dot(x)
 
-def gradientIteration():
+def gradientIteration(i):
     global u
     global ro
     global epsilon    
     global uTab
     global B
 
-    
-    for i in range(0, NT):
-        u = u - ro * gradient()
-        uTab.append(u)
+    u = uTab[i] - ro * gradient()
+    uTab.append(u)
     return u
 
 
@@ -142,13 +144,18 @@ def main():
     global xTab
     global pTab
     global uTab
-    xTab = []
-    pTab = []
-    uTab = []
+    global NT
 
-    firstEquation()
-    secondEquation()
-    gradientIteration()
+    for i in range(0, NT):
+        xTab = []
+        pTab = []
+        x = np.transpose(np.atleast_2d([0.1,0,0,0]))
+        firstEquation()
+        secondEquation()
+        for j in range (0, NT):
+            uTab.append(np.transpose(np.atleast_2d([0,0])))
+            gradientIteration(j)
+        
 
     x1 = []
     y1 = []
@@ -162,7 +169,7 @@ def main():
         y2.append(sin(w*i*dT))
 
     plt.plot(x1, y1)
-    plt.plot(x2,y2)
+    # plt.plot(x2,y2)
     plt.show()
 
 
