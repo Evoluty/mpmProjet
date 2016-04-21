@@ -18,19 +18,20 @@ def init():
     global dT
     global ro
     global w
+    global uTab
 
-    T = 1
+    T = 1.0
     w = 2*pi/T
-    epsilon=10**(-8)
-    NT = 50
-    dT = 0.01
+    epsilon=0.001
+    NT = 500
+    dT = T/NT
     ro = 0.03
 
-    x = np.transpose(np.atleast_2d([1,0,0,0]))
+    x = np.transpose(np.atleast_2d([0.1,0,0,0]))
     u = np.transpose(np.atleast_2d([0,0]))
 
     A = np.matrix([[0, 1, 0, 0],
-                  [w**2*3, 0, 0, 2*w], 
+                  [(w**2)*3, 0, 0, 2*w], 
                   [0, 0, 0, 1], 
                   [0, -2*w, 0, 0]])
 
@@ -39,37 +40,48 @@ def init():
                    [0, 0], 
                    [0, 1]])
 
+    uTab = []
+    for i in range(0, NT):
+        uTab.append(u)
+
+
+#############################
+# Change coords for display #
+#############################
+
+def newCoordX(x, y, n):
+    global w
+    global dT
+
+    return x*cos(w*n*dT) - y*sin(w*n*dT) + cos(w*n*dT)
+
+def newCoordY(x, y, n):
+    global w
+    global dT
+    return x*sin(w*n*dT) + y*cos(w*n*dT) + sin(w*n*dT)
+
 
 ############################
 # Solve the first equation #
 ############################
 
-def changement_coord_x1(x1, x2, n, delta_t):
-    global w
-    return x1*cos(w*n*delta_t) - x2*sin(w*n*delta_t) + cos(w*n*delta_t)
-
-def changement_coord_x2(x1, x2, n, delta_t):
-    global w
-    return x1*sin(w*n*delta_t) + x2*cos(w*n*delta_t) + sin(w*n*delta_t)
-
-def calculateF():
+def calculateF(i):
     global A
-    global x
+    global uTab
     global B
     global u
-    return A.dot(x) + B.dot(u)
+    return A.dot(x) + B.dot(uTab[i])
 
 def firstEquation():
     global NT
     global x    
     global dT
-    global tab_x
+    global xTab
 
     for i in range(0, NT):
-        valeur = calculateF()
-        print x
+        valeur = calculateF(i)
         x = x+dT*valeur 
-        tab_x.append([changement_coord_x1(x[0,0], x[2,0], i, dT), x[1,0], changement_coord_x2(x[0,0], x[2,0], i, dT), x[3,0]])
+        xTab.append(x)
     return x
 
 
@@ -77,23 +89,24 @@ def firstEquation():
 # Solve the second equation #
 #############################
 
-def calculateG():
+def calculateG(i):
     global A
-    global x
+    global xTab
     global B
     global u
 
-    return np.transpose((-1)*A).dot(x)
+    return np.transpose((-1)*A).dot(xTab[i])
 
 def secondEquation():
     global x
-    p = firstEquation()    
     global dT
     global NT
-    
+    global pTab
+    p = x
     for i in range(0, NT):
-        valeur = calculateG()
+        valeur = calculateG(i)
         p = p - dT * valeur
+        pTab.append(p)
     return p
 
 ############
@@ -101,19 +114,22 @@ def secondEquation():
 ############
 
 def gradient():
+    global x
     global u
     global B
     global epsilon    
-    return epsilon*u + np.transpose(B).dot(secondEquation())
+    
+    return epsilon*u + np.transpose(B).dot(x)
 
-def gradientIteration():
+def gradientIteration(i):
     global u
     global ro
     global epsilon    
+    global uTab
     global B
 
-    for i in range(0, NT):
-        u = u - ro * gradient()
+    u = uTab[i] - ro * gradient()
+    uTab.append(u)
     return u
 
 
@@ -124,21 +140,36 @@ def gradientIteration():
 def main():
     init()
     
-    global tab_x
-    tab_x = []
+    global dT
+    global xTab
+    global pTab
+    global uTab
+    global NT
 
-    print gradientIteration()
+    for i in range(0, NT):
+        xTab = []
+        pTab = []
+        x = np.transpose(np.atleast_2d([0.1,0,0,0]))
+        firstEquation()
+        secondEquation()
+        for j in range (0, NT):
+            uTab.append(np.transpose(np.atleast_2d([0,0])))
+            gradientIteration(j)
+        
 
-    global x
-    print "test"
-    print x
     x1 = []
     y1 = []
-    for i in range(0, len(x)):
-        x1.append(tab_x[i][0])
-        y1.append(tab_x[i][2])
+    x2 = []
+    y2 = []
+    for i in range(0, len(xTab)):
+        x1.append(newCoordX(xTab[i][0, 0], xTab[i][2, 0], i))
+        y1.append(newCoordY(xTab[i][0, 0], xTab[i][2, 0], i))
+
+        x2.append(cos(w*i*dT))
+        y2.append(sin(w*i*dT))
 
     plt.plot(x1, y1)
+    # plt.plot(x2,y2)
     plt.show()
 
 
