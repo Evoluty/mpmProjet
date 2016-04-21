@@ -138,6 +138,7 @@ def gradientIteration():
 def main():
     init()
     
+    global dT
     global xTab
     global pTab
     global uTab
@@ -151,11 +152,17 @@ def main():
 
     x1 = []
     y1 = []
+    x2 = []
+    y2 = []
     for i in range(0, len(xTab)):
         x1.append(newCoordX(xTab[i][0, 0], xTab[i][2, 0], i))
         y1.append(newCoordY(xTab[i][0, 0], xTab[i][2, 0], i))
 
+        x2.append(cos(w*i*dT))
+        y2.append(sin(w*i*dT))
+
     plt.plot(x1, y1)
+    plt.plot(x2,y2)
     plt.show()
 
 
