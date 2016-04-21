@@ -4,7 +4,7 @@
 \usepackage{amsmath, amssymb,amsfonts,  mathrsfs}
 \usepackage{amsthm}%\usepackage[T1]{fontenc}
 \usepackage{a4wide}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8x]{inputenc}
 \usepackage[francais]{babel}% donne de bonnes c\'esures  en francais
 \usepackage{titlesec}%pour modifier le style des sections
 \usepackage{float}%pour fixer les flottants
@@ -14,7 +14,7 @@
 \usepackage{nopageno} % pour supprimer les numeros des pages
 \usepackage{pdfsync}
 \pagestyle{myheadings}
-\markright{ENSIIE 1A Année 2015/2016 \\ MPM2 Projet Math}
+\markright{ENSIIE 1A 2015/2016 - MPM projet Math - Michel Massarro}
 \newtheorem{definition}{Définition}
 
 \begin{document}
@@ -129,10 +129,89 @@ On identifie par rapport à la dérivée de Gâteau, d'où :
 \end{itemize}
 
 \subsection{Calcul de $\nabla J$}
+    \begin{itemize}
+         \item Afin de déterminer le gradiant de $J$, on introduit l'équation différentielle
+        rétrograde 
+    
+        \begin{equation*}
+          \left\{\begin{array}{l}
+                   \dot p(t) = A^Tp(t)\\
+                   p(T) = x(T).
+                 \end{array}
+          \right.  
+        \end{equation*}
+                  
+          Montrons que:
+          \begin{equation*}
+              \nabla J(u) = \varepsilon u + B^Tp.
+           \end{equation*}
+           
+           \item On a donc: 
+           \begin{equation}
+                \int_{0}^{T}\dot p(t)x'(u,\delta u)(t)dt=\int_{0}^{T}-A^Tp(t)x'(u,\delta u)dt
+           \end{equation}
+           
+               Avec $x'(u,\delta u)= Ax'(u,\delta u)(t) + B(\delta u)(t)$\\
+               On fait donc une Intégration par parties sur (1) (partie droite):
+               \begin{equation*}
+                    \begin{matrix}
+                u(x)=x'(u,\delta u) & v'(x)=\dot p(t))\\ 
+                u'(x)=\dot x'(u,\delta u)& v(x)=p(t)
+                \end{matrix}
+               \end{equation*}
+             Ainsi: \\
+             \begin{equation*}
+                 [x'(u,\delta u)(t)p(t)]^T_0 - \int_{0}^{T}\dot x'(u,\delta u)p(t)
+             \end{equation*}
+             \begin{equation*}
+                 (x'(u,\delta u)(T)p(T) \underbrace{-x'(u,\delta u)(0)p(0)}_0)-\int_{0}^{T}\dot x'(u,\delta u)p(t)
+             \end{equation*}
+             Avec l'égalité d'avant, on a:
+             \begin{equation*}
+                 x'(u,\delta u)(T)p(T) -\int_{0}^{T}\dot x'(u,\delta u)p(t)=\int_{0}^{T}-A^Tp(t)x'(u,\delta u)dt
+             \end{equation*}
+              \begin{equation*}
+                 x'(u,\delta u)(T)p(T) =\int_{0}^{T}-A^Tp(t)x'(u,\delta u) + \int_{0}^{T}\dot x'(u,\delta u)p(t)
+             \end{equation*}
+             \begin{equation*}
+                 x'(u,\delta u)(T)p(T) =\int_{0}^{T}-A^Tp(t)x'(u,\delta u) + \dot x'(u,\delta u)p(t) \, \mathrm {d}t
+             \end{equation*}
+             \begin{equation*}
+                 x'(u,\delta u)(T)p(T) =\int_{0}^{T}-A^Tp(t)x'(u,\delta u) + p(t)[Ax'(u,\delta u)(t)+B(\delta u)(t)] \, \mathrm {d}t
+             \end{equation*}
+             \begin{equation*}
+                 x'(u,\delta u)(T)p(T) =\int_{0}^{T}-p(t)Ax'(u,\delta u) + p(t)Ax'(u,\delta u)(t)+p(t)B(\delta u)(t) \, \mathrm {d}t
+             \end{equation*}
+             \begin{equation*}
+                 x'(u,\delta u)(T)p(T) =\int_{0}^{T}p(t)B(\delta u)(t) \, \mathrm {d}t
+             \end{equation*}
+             Or: 
+             \begin{equation*}
+                 J'(u,\delta u)(t)=\int_{0}^{T} \epsilon u(s)\delta u(s) + x'(u, \delta u)(t)x(t) \, \mathrm {d}t
+             \end{equation*}
+             Et donc:
+             \begin{equation*}
+                 \int_{0}^{T}B^Tp(t)\delta u \, \mathrm {d}t = J'(u, \delta u)-\int_{0}^{T}\varepsilon u\delta u \, \mathrm {d}t
+             \end{equation*}
+             \begin{equation*}
+             \begin{aligned}
+                 \int_{0}^{T}\delta u(B^Tp(t)+\varepsilon u) \, \mathrm{d}t &=  J'(u,\delta u)(t)\\
+                  &= \int_{0}^{T}\nabla J \delta u \, \mathrm{d}t \\
+                  
+             \end{aligned}
+             \end{equation*}
+             \item On peut donc en conclure que:
+             \begin{equation*}
+                 \nabla J = \varepsilon u + B^Tp(t)
+             \end{equation*}
+    \end{itemize}
+   
 
-\subsection{Résolution numérique}
 
-\section{Partie Informatique}
+\section{Partie Informatique - Résolution numérique}
+Afin de répondre à la problématique, modéliser les données et pouvoir répondre à la question, nous avons choisi d'utiliser le langage python.
+
+
 
 \end{document}
 
