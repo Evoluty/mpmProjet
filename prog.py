@@ -71,7 +71,7 @@ def firstEquation(xk, uk):
 
 # Returns pk : the solution of the current step of the backward euler equation
 def calculateG(p):
-    return -np.dot(A.T, p)
+    return np.dot(-1*A.T, p)
 
 # Returns pn : the array of the solutions of the backward euler equation
 def secondEquation(p):
