@@ -1,1 +1,4 @@
 # mpmProjet
+
+Ce projet s'inscrit dans le programme scolaire de l'ENSIIE et a pour but d'allier étroitement outils mathématiques et informatiques. Dans un délais de 2 semaines, à travers 3 séances de 4 heures, l'objectif était de répondre à une problématique complexe. Dans un premier temps la résolution se voulait mathématique (dérivées de gateaux, calcul de gradients, optimisation), puis, dans un second temps, les différentes équations/solutions trouvées mathématiquement ont été codées. 
+Concernant la partie informatique, le choix du langage était libre: nous avons donc opté pour le python, de par sa facilité d'utilisation, de compilation, pour le choix déjà existant des librairies pour les calculs de matrices (transposées, multiplication, etc), les libraries pour le tracage des graphes, etc.
