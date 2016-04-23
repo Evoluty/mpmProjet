@@ -10,12 +10,13 @@
 \usepackage{float}%pour fixer les flottants
 \usepackage{url}%pour ecrire une adresse d'un site web
 \usepackage[all]{xy}%pour faire des diagrammes
-\usepackage[dvips]{graphicx}
+\usepackage{graphicx}
 \usepackage{nopageno} % pour supprimer les numeros des pages
 \usepackage{pdfsync}
 \pagestyle{myheadings}
 \markright{ENSIIE 1A 2015/2016 - MPM projet Math - Michel Massarro}
 \newtheorem{definition}{Définition}
+\usepackage[T1]{fontenc} 
 
 \begin{document}
 \begin{center}
@@ -90,7 +91,7 @@
 		&= \lim_{\lambda\to 0^+} \frac{1}{\lambda} [\frac{1}{2}x²(u+\delta u)(t) - \frac{1}{2} x²(u)(t)]\\
 \end{aligned}		
 \end{equation*}
-On identifie par rapport à la dérivée de Gâteau, d'où :
+On identifie par rapport à la dérivée de Gâteau à la constante près, d'où :
 \begin{equation*}
 \begin{aligned}
 	J'(u,\delta u)(t) &= \lim_{\lambda\to 0^+} \int_{0}^{T} \frac{\epsilon}{2} \frac{\lambda²\delta u²(s)+2\lambda u(s)\delta u(s)}{\lambda} \, \mathrm{d}s + [\frac{1}{2} x² u(t)]' \\
@@ -159,7 +160,7 @@ On identifie par rapport à la dérivée de Gâteau, d'où :
                 u'(x)=\dot x'(u,\delta u)& v(x)=p(t)
                 \end{matrix}
                \end{equation*}
-             Ainsi: \\
+             Ainsi: 
              \begin{equation*}
                  [x'(u,\delta u)(t)p(t)]^T_0 - \int_{0}^{T}\dot x'(u,\delta u)p(t)
              \end{equation*}
@@ -196,10 +197,10 @@ On identifie par rapport à la dérivée de Gâteau, d'où :
              \begin{equation*}
              \begin{aligned}
                  \int_{0}^{T}\delta u(B^Tp(t)+\varepsilon u) \, \mathrm{d}t &=  J'(u,\delta u)(t)\\
-                  &= \int_{0}^{T}\nabla J \delta u \, \mathrm{d}t \\
-                  
+                  &= \int_{0}^{T}\nabla J \delta u \, \mathrm{d}t 
              \end{aligned}
              \end{equation*}
+          
              \item On peut donc en conclure que:
              \begin{equation*}
                  \nabla J = \varepsilon u + B^Tp(t)
@@ -209,8 +210,48 @@ On identifie par rapport à la dérivée de Gâteau, d'où :
 
 
 \section{Partie Informatique - Résolution numérique}
-Afin de répondre à la problématique, modéliser les données et pouvoir répondre à la question, nous avons choisi d'utiliser le langage python.
 
+Afin de répondre à la problématique, modéliser les données et pouvoir répondre à la question, nous avons choisi d'utiliser le langage python. 
+\medbreak
+Nous utilisons les conditions initiales de l'énoncé
+\begin{center}
+\includegraphics[scale=0.5]{init.png}
+\end{center}
+
+Le programme présente plusieurs parties. Le main itère un nombre donné de fois pour converger vers une solution de déplacement de plus en plus précise et minimale. La solution finale de u est utilisée comme valeur de départ de la prochaine itération.
+
+\begin{center}
+\includegraphics[scale=0.5]{main.png}
+\end{center}
+
+A chaque itération, le main doit appeler une fonction qui renvoie une solution à une équation d'Euler permettant d'obtenir X. Pour obtenir cette solution, il est necessaire d'itérer pour converger vers celle-ci.
+Nous avons fait une fonction qui renvoie la solution de f(x, u) necessaire pour calculer Euler au rang k.
+\begin{center}
+\includegraphics[scale=0.5]{firstEq.png}
+\end{center}
+
+Cette solution sert de condition initiale pour résoudre l'équation d'Euler rétrograde. Euler rétrograde, à l'instar d'euler, itère également en convergeant vers la solution. A chaque itération une fonction qui calcule g(x, u) est appellée.
+\begin{center}
+\includegraphics[scale=0.5]{secEq.png}
+\end{center}
+
+Enfin cette solution est utilisée dans une fonction qui récupère le gradient à la kième itération du \textit{main}. 
+\begin{center}
+\includegraphics[scale=0.5]{grad.png}
+\end{center}
+
+Au bout des 500 itérations du main, nous récupérons donc un tableau de positions X qui est converti dans le repère circulaire de l'ISS.
+
+\begin{center}
+\includegraphics[scale=0.5]{adapt.png}
+\end{center}
+
+
+Puis ce tableau est affiché dans un graphique (en bleu). Nous avons également affiché la trajectoire de l'ISS (en vert).
+
+\begin{center}
+\includegraphics[scale=0.5]{screenshot.png}
+\end{center}
 
 
 \end{document}
@@ -219,3 +260,4 @@ Afin de répondre à la problématique, modéliser les données et pouvoir répondre à
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
