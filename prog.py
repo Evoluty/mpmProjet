@@ -26,7 +26,7 @@ u = np.transpose(np.atleast_2d([0, 0]))
 A = np.matrix([[0, 1, 0, 0],
               [3*(w**2), 0, 0, 2*w], 
               [0, 0, 0, 1], 
-              [0., -2*w, 0, 0]])
+              [0, -2*w, 0, 0]])
 
 B = np.matrix([[0, 0], 
                [1, 0], 
@@ -70,16 +70,16 @@ def firstEquation(xk, uk):
 #############################
 
 # Returns pk : the solution of the current step of the backward euler equation
-def calculateG(p):
-    return np.dot(-1*A.T, p)
+def calculateG(xk):
+    return np.dot(-1*A.T, xk)
 
 # Returns pn : the array of the solutions of the backward euler equation
-def secondEquation(p):
-    pTab=[p]
+def secondEquation(xk):
+    pTab=[xk]
     for k in range(0, NT):
-        res=calculateG(p)
-        p = p-dT*res
-        pTab.append(p)
+        res = calculateG(xk)
+        xk = xk-dT*res
+        pTab.append(xk)
     return pTab
 
 
@@ -109,15 +109,15 @@ def main():
         pTab = secondEquation(xTab[NT])
         grad = gradient(pTab[NT-i])
         # We initialize the next u
-        u=u-ro*grad        
+        u = u-ro*grad        
 
     # Put the results in tabs and modify the values to put them in the circular base
     print "Retrieving values" 
     x1, y1, x2, y2 = [], [], [], []
     for i in range(0, NT):
         # These arrays represent the mouvement of the rocket
-        x1.append(newCoordX(float(xTab[i][0][0]), float(xTab[i][2][0]), i))
-        y1.append(newCoordY(float(xTab[i][0][0]), float(xTab[i][2][0]), i))
+        x1.append(newCoordX(float(xTab[i][0][0]), float(xTab[i][2, 0]), i))
+        y1.append(newCoordY(float(xTab[i][0][0]), float(xTab[i][2, 0]), i))
         # Second array is to print the circular mouvement of the ISS Station 
         x2.append(cos(w*i*dT))
         y2.append(sin(w*i*dT))
